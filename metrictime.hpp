@@ -14,8 +14,10 @@
 #define TIMERSTOP(label)                                                   \
         b##label = std::chrono::high_resolution_clock::now();                           \
         std::chrono::duration<double> delta##label = b##label-a##label;        \
-        std::cout << "# elapsed time ("<< #label <<"): "                       \
-                  << delta##label.count()  << "s" << std::endl;
+        std::cout <<  #label << ";" << delta##label.count()  << std::endl;
+
+        // std::cout << "# elapsed time ("<< #label <<"): "                       \
+        //           << delta##label.count()  << "s" << std::endl;
 
 #endif
 

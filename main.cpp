@@ -15,8 +15,9 @@ int main(int argc, char *argv[]){
     char c;
     bool print_results = false;
     uint threads = 8;
+    int reps = 1;
 
-	while ((c = getopt(argc, argv, "n:t:p")) != -1)
+	while ((c = getopt(argc, argv, "n:t:r:p")) != -1)
 	{
 		switch (c) {
 			case 'n':
@@ -27,6 +28,9 @@ int main(int argc, char *argv[]){
 			break;
 			case 'p':
 				print_results = true;
+			break;
+			case 'r':
+				reps = std::stoi (optarg);
 			break;
 			default:
 			break;
@@ -40,32 +44,11 @@ int main(int argc, char *argv[]){
     int** B = filled_mat(n);
     int** C = empty_mat(n);
 
-    std::vector<int> vec_1 (n*n, 3);
-    std::vector<int> vec_2 (n*n, 2);
-    std::vector<int> vec_3 (n*n, 0);
-
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            vec_1[n*i+j] = A[i][j];
-            vec_2[n*i+j] = B[i][j];
-        }
-    }
-    //int** C_cache = empty_mat(n);
-    //int** C_cache_par = empty_mat(n);
-
-    //print_mat(A, n);
-    //print_mat(B, n);
-
     if (print_results){
         TIMERSTART(Secuencial)
         seq_mult(A, B, C, n);
         print_mat(C, n);
         TIMERSTOP(Secuencial)
-
-        // TIMERSTART(Vector)
-        // vec_mult(vec_1, vec_2, vec_3, n);
-        // print_vec(vec_3, n);
-        // TIMERSTOP(Vector)
 
         TIMERSTART(Paralelo)
         par_mult(A, B, C, n);
@@ -97,13 +80,12 @@ int main(int argc, char *argv[]){
         // print_mat(C, n);
         // TIMERSTOP(Strassen_Paralelo_Recursivo)
     }else{
-        TIMERSTART(Secuencial)
-        seq_mult(A, B, C, n);
-        TIMERSTOP(Secuencial)
-
-        // TIMERSTART(Vector)
-        // vec_mult(vec_1, vec_2, vec_3, n);
-        // TIMERSTOP(Vector)
+        
+        for(int i=0;i<reps;i++){
+            TIMERSTART(Secuencial)
+            seq_mult(A, B, C, n);
+            TIMERSTOP(Secuencial)
+        }
 
         TIMERSTART(Paralelo)
         par_mult(A, B, C, n);

@@ -6,6 +6,7 @@
 #include "comunes.hpp"
 #include <vector>
 #include <omp.h>
+#include <immintrin.h>
 
 // ------------------------------------------
 // Basic Functions:
@@ -26,18 +27,6 @@ int **tr_mat(int **A, int n){
 // Traditional Multiplication Functions:
 // ------------------------------------------
 
-
-void vec_mult(std::vector<int> A, std::vector<int> B, std::vector<int> &C, int n){
-    for (int i = 0; i < n; i++){
-        for (int j = 0; j < n; j++) {
-            float accum = 0;
-            for (int k = 0; k < n; k++){
-                accum += A[i*n+k]*B[k*n+j];
-                C[i*n+j] = accum;
-            }
-        }
-    }
-}
 
 void seq_mult(int** A, int** B, int** C, int n){
     // Matriz A, B y C de nxn
