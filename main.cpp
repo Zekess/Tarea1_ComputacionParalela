@@ -87,25 +87,34 @@ int main(int argc, char *argv[]){
             TIMERSTOP(Secuencial)
         }
 
-        TIMERSTART(Paralelo)
-        par_mult(A, B, C, n);
-        TIMERSTOP(Paralelo)
+        for(int i=0;i<reps;i++){
+            TIMERSTART(Paralelo)
+            par_mult(A, B, C, n);
+            TIMERSTOP(Paralelo)
+        }
 
-        TIMERSTART(Cache)
-        cache_mult(A, B, C, n);
-        TIMERSTOP(Cache)
+        for(int i=0;i<reps;i++){
+            TIMERSTART(Cache)
+            cache_mult(A, B, C, n);
+            TIMERSTOP(Cache)
+        }
 
-        TIMERSTART(Cache_Paralelo)
-        cache_par_mult(A, B, C, n);
-        TIMERSTOP(Cache_Paralelo)
+        for(int i=0;i<reps;i++){
+            TIMERSTART(Cache_Paralelo)
+            cache_par_mult(A, B, C, n);
+            TIMERSTOP(Cache_Paralelo)
+        }
+        for(int i=0;i<reps;i++){
+            TIMERSTART(Tradicional_Recursivo)
+            traditional_mult(A, B, C, n);
+            TIMERSTOP(Tradicional_Recursivo)
+        }
 
-        TIMERSTART(Tradicional_Recursivo)
-        traditional_mult(A, B, C, n);
-        TIMERSTOP(Tradicional_Recursivo)
-
-        TIMERSTART(Strassen_Recursivo)
-        strassen_mult(A, B, C, n);
-        TIMERSTOP(Strassen_Recursivo)
+        for(int i=0;i<reps;i++){
+            TIMERSTART(Strassen_Recursivo)
+            strassen_mult(A, B, C, n);
+            TIMERSTOP(Strassen_Recursivo)
+        }
 
         // TIMERSTART(Strassen_Paralelo_Recursivo)
         // strassen_par_mult(A, B, C, n);
