@@ -7,53 +7,11 @@
 //#include <vector>
 #include <omp.h>
 
+int n_base = (1 << 5);
+
 // ------------------------------------------
 // Basic Functions:
 // ------------------------------------------
-
-int **submat_upper_left(int** A, int n){
-    int n_submat = n/2;
-    int **submat = empty_mat(n_submat);
-    for(int i=0;i<n_submat;i++){
-        for(int j=0; j<n_submat;j++){
-            submat[i][j]=A[i][j];
-        }
-    }
-    return submat;
-}
-
-int **submat_upper_right(int** A, int n){
-    int n_submat = n/2;
-    int **submat = empty_mat(n_submat);
-    for(int i=0;i<n_submat;i++){
-        for(int j=0; j<n_submat;j++){
-            submat[i][j]=A[i][n_submat+j];
-        }
-    }
-    return submat;
-}
-
-int **submat_lower_left(int** A, int n){
-    int n_submat = n/2;
-    int **submat = empty_mat(n_submat);
-    for(int i=0;i<n_submat;i++){
-        for(int j=0; j<n_submat;j++){
-            submat[i][j]=A[n_submat+i][j];
-        }
-    }
-    return submat;
-}
-
-int **submat_lower_right(int** A, int n){
-    int n_submat = n/2;
-    int **submat = empty_mat(n_submat);
-    for(int i=0;i<n_submat;i++){
-        for(int j=0; j<n_submat;j++){
-            submat[i][j]=A[n_submat+i][n_submat+j];
-        }
-    }
-    return submat;
-}
 
 void submat(int** A, int** B, int n, int n_row, int n_col){
 	for (int i = 0; i < n; i++) 
@@ -86,11 +44,16 @@ void traditional_mult(int** A, int** B, int** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
-    if (n==2){
-        C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0];
-        C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0];
-        C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1];
-        C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1];
+    // if (n==2){
+    //     C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0];
+    //     C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0];
+    //     C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1];
+    //     C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1];
+    //     return;
+    // }
+
+    if (n==n_base){
+        base_mult(A, B, C, n);
         return;
     }
 
@@ -170,11 +133,16 @@ void strassen_mult(int** A, int** B, int** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
-    if (n==2){
-        C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0];
-        C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0];
-        C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1];
-        C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1];
+    // if (n==2){
+    //     C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0];
+    //     C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0];
+    //     C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1];
+    //     C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1];
+    //     return;
+    // }
+
+    if (n==n_base){
+        base_mult(A, B, C, n);
         return;
     }
 
@@ -275,116 +243,116 @@ void strassen_mult(int** A, int** B, int** C, int n){
 }
 
 
-void strassen_par_mult(int** A, int** B, int** C, int n){
-    // Matriz A, B y C de nxn
-    // con n potencia de 2.
+// void strassen_par_mult(int** A, int** B, int** C, int n){
+//     // Matriz A, B y C de nxn
+//     // con n potencia de 2.
 
-    if (n==2){
-        C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0];
-        C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0];
-        C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1];
-        C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1];
-        return;
-    }
+//     if (n==2){
+//         C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0];
+//         C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0];
+//         C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1];
+//         C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1];
+//         return;
+//     }
 
-    int **A_11 = submat_upper_left(A, n);
-    int **A_12 = submat_upper_right(A, n);
-    int **A_21 = submat_lower_left(A, n);
-    int **A_22 = submat_lower_right(A, n);
+//     int **A_11 = submat_upper_left(A, n);
+//     int **A_12 = submat_upper_right(A, n);
+//     int **A_21 = submat_lower_left(A, n);
+//     int **A_22 = submat_lower_right(A, n);
 
-    int **B_11 = submat_upper_left(B, n);
-    int **B_12 = submat_upper_right(B, n);
-    int **B_21 = submat_lower_left(B, n);
-    int **B_22 = submat_lower_right(B, n);
+//     int **B_11 = submat_upper_left(B, n);
+//     int **B_12 = submat_upper_right(B, n);
+//     int **B_21 = submat_lower_left(B, n);
+//     int **B_22 = submat_lower_right(B, n);
 
-    int **M_1 = empty_mat(n/2);
-    int **M_2 = empty_mat(n/2);
-    int **M_3 = empty_mat(n/2);
-    int **M_4 = empty_mat(n/2);
-    int **M_5 = empty_mat(n/2);
-    int **M_6 = empty_mat(n/2);
-    int **M_7 = empty_mat(n/2);
+//     int **M_1 = empty_mat(n/2);
+//     int **M_2 = empty_mat(n/2);
+//     int **M_3 = empty_mat(n/2);
+//     int **M_4 = empty_mat(n/2);
+//     int **M_5 = empty_mat(n/2);
+//     int **M_6 = empty_mat(n/2);
+//     int **M_7 = empty_mat(n/2);
 
-    int **Aux_1 = empty_mat(n/2);
-    int **Aux_2 = empty_mat(n/2);
+//     int **Aux_1 = empty_mat(n/2);
+//     int **Aux_2 = empty_mat(n/2);
 
-#pragma omp task
-    {
-    // M1 = (A11 + A22)*(B11 + B22)
-    mat_sum(A_11, A_22, Aux_1, n/2);
-    mat_sum(B_11, B_22, Aux_2, n/2);
-    strassen_mult(Aux_1, Aux_2, M_1, n/2);
-    }
-#pragma omp task
-    {
-    //M2 = (A21 + A22)*B11
-    mat_sum(A_21, A_22, Aux_1, n/2);
-    strassen_mult(Aux_1, B_11, M_2, n/2);
-    }
-#pragma omp task
-    {
-    //M3 = A11*(B12 - B22)
-    mat_sub(B_12, B_22, Aux_1, n/2);
-    strassen_mult(A_11, Aux_1, M_3, n/2);
-    }
-#pragma omp task
-    {
-    //M4 = A22*(B21 - B11)
-    mat_sub(B_21, B_11, Aux_1, n/2);
-    strassen_mult(A_22, Aux_1, M_4, n/2);
-    }
-#pragma omp task
-    {
-    //M5 = (A11 + A12)*B22
-    mat_sum(A_11, A_12, Aux_1, n/2);
-    strassen_mult(Aux_1, B_22, M_5, n/2);
-    }
-#pragma omp task
-    {
-    //M6 = (A21 - A11)*(B11 + B12)
-    mat_sub(A_21, A_11, Aux_1, n/2);
-    mat_sum(B_11, B_12, Aux_2, n/2);
-    strassen_mult(Aux_1, Aux_2, M_6, n/2);
-    }
-#pragma omp task
-    {
-    //M7 = (A12 - A22)*(B21 + B22)
-    mat_sub(A_12, A_22, Aux_1, n/2);
-    mat_sum(B_21, B_22, Aux_2, n/2);
-    strassen_mult(Aux_1, Aux_2, M_7, n/2);
-    }
+// #pragma omp task
+//     {
+//     // M1 = (A11 + A22)*(B11 + B22)
+//     mat_sum(A_11, A_22, Aux_1, n/2);
+//     mat_sum(B_11, B_22, Aux_2, n/2);
+//     strassen_mult(Aux_1, Aux_2, M_1, n/2);
+//     }
+// #pragma omp task
+//     {
+//     //M2 = (A21 + A22)*B11
+//     mat_sum(A_21, A_22, Aux_1, n/2);
+//     strassen_mult(Aux_1, B_11, M_2, n/2);
+//     }
+// #pragma omp task
+//     {
+//     //M3 = A11*(B12 - B22)
+//     mat_sub(B_12, B_22, Aux_1, n/2);
+//     strassen_mult(A_11, Aux_1, M_3, n/2);
+//     }
+// #pragma omp task
+//     {
+//     //M4 = A22*(B21 - B11)
+//     mat_sub(B_21, B_11, Aux_1, n/2);
+//     strassen_mult(A_22, Aux_1, M_4, n/2);
+//     }
+// #pragma omp task
+//     {
+//     //M5 = (A11 + A12)*B22
+//     mat_sum(A_11, A_12, Aux_1, n/2);
+//     strassen_mult(Aux_1, B_22, M_5, n/2);
+//     }
+// #pragma omp task
+//     {
+//     //M6 = (A21 - A11)*(B11 + B12)
+//     mat_sub(A_21, A_11, Aux_1, n/2);
+//     mat_sum(B_11, B_12, Aux_2, n/2);
+//     strassen_mult(Aux_1, Aux_2, M_6, n/2);
+//     }
+// #pragma omp task
+//     {
+//     //M7 = (A12 - A22)*(B21 + B22)
+//     mat_sub(A_12, A_22, Aux_1, n/2);
+//     mat_sum(B_21, B_22, Aux_2, n/2);
+//     strassen_mult(Aux_1, Aux_2, M_7, n/2);
+//     }
 
-    for(int i=0; i<n/2; i++){
-        for(int j=0; j<n/2; j++){
-            C[i][j] = M_1[i][j] + M_4[i][j] - M_5[i][j] + M_7[i][j];
-            C[i][j+n/2] = M_3[i][j] + M_5[i][j];
-            C[i+n/2][j] = M_2[i][j] + M_4[i][j];
-            C[i+n/2][j+n/2] = M_1[i][j] - M_2[i][j] + M_3[i][j] + M_6[i][j];
-        }
-    }
+//     for(int i=0; i<n/2; i++){
+//         for(int j=0; j<n/2; j++){
+//             C[i][j] = M_1[i][j] + M_4[i][j] - M_5[i][j] + M_7[i][j];
+//             C[i][j+n/2] = M_3[i][j] + M_5[i][j];
+//             C[i+n/2][j] = M_2[i][j] + M_4[i][j];
+//             C[i+n/2][j+n/2] = M_1[i][j] - M_2[i][j] + M_3[i][j] + M_6[i][j];
+//         }
+//     }
 
-    for (int i=0; i<n/2; i++){
-        delete A_11[i];
-        delete A_12[i];
-        delete A_21[i];
-        delete A_22[i];
-        delete B_11[i];
-        delete B_12[i];
-        delete B_21[i];
-        delete B_22[i];
+//     for (int i=0; i<n/2; i++){
+//         delete A_11[i];
+//         delete A_12[i];
+//         delete A_21[i];
+//         delete A_22[i];
+//         delete B_11[i];
+//         delete B_12[i];
+//         delete B_21[i];
+//         delete B_22[i];
 
-        delete M_1[i];
-        delete M_2[i];
-        delete M_3[i];
-        delete M_4[i];
-        delete M_5[i];
-        delete M_6[i];
-        delete M_7[i];
+//         delete M_1[i];
+//         delete M_2[i];
+//         delete M_3[i];
+//         delete M_4[i];
+//         delete M_5[i];
+//         delete M_6[i];
+//         delete M_7[i];
 
-        delete Aux_1[i];
-        delete Aux_2[i];
-    }
-}
+//         delete Aux_1[i];
+//         delete Aux_2[i];
+//     }
+// }
 
 
 /*

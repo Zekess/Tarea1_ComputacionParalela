@@ -8,7 +8,7 @@
 
 //using namespace std;
 
-
+int n_min = 6;
 
 int main(int argc, char *argv[]){
     int n;
@@ -21,7 +21,8 @@ int main(int argc, char *argv[]){
 	{
 		switch (c) {
 			case 'n':
-				n = (1 << std::stoi (optarg));
+				//n = (1 << std::stoi (optarg));
+                n = std::stoi (optarg);
 			break;
 			case 't':
 				threads = std::stoi (optarg);
@@ -38,87 +39,99 @@ int main(int argc, char *argv[]){
 	}
 
     omp_set_num_threads (threads);
-    std::cout << "n = " << n << "\n";
-    
-    int** A = filled_mat(n);
-    int** B = filled_mat(n);
-    int** C = empty_mat(n);
+
+    std::cout << "n_min = " << n_min << "\n";
+    std::cout << "n_max = " << n << "\n";
+    std::cout << "threads = " << threads << "\n";
+    std::cout << "reps = " << reps << "\n";
 
     if (print_results){
+        int n_p = (1 << n);
+        int** A = filled_mat(n_p);
+        int** B = filled_mat(n_p);
+        int** C = empty_mat(n_p);
+
         TIMERSTART(Secuencial)
-        seq_mult(A, B, C, n);
-        print_mat(C, n);
+        seq_mult(A, B, C, n_p);
+        print_mat(C, n_p);
         TIMERSTOP(Secuencial)
 
         TIMERSTART(Paralelo)
-        par_mult(A, B, C, n);
-        print_mat(C, n);
+        par_mult(A, B, C, n_p);
+        print_mat(C, n_p);
         TIMERSTOP(Paralelo)
 
         TIMERSTART(Cache)
-        cache_mult(A, B, C, n);
-        print_mat(C, n);
+        cache_mult(A, B, C, n_p);
+        print_mat(C, n_p);
         TIMERSTOP(Cache)
 
         TIMERSTART(Cache_Paralelo)
-        cache_par_mult(A, B, C, n);
-        print_mat(C, n);
+        cache_par_mult(A, B, C, n_p);
+        print_mat(C, n_p);
         TIMERSTOP(Cache_Paralelo)
 
         TIMERSTART(Tradicional_Recursivo)
-        traditional_mult(A, B, C, n);
-        print_mat(C, n);
+        traditional_mult(A, B, C, n_p);
+        print_mat(C, n_p);
         TIMERSTOP(Tradicional_Recursivo)
 
         TIMERSTART(Strassen_Recursivo)
-        strassen_mult(A, B, C, n);
-        print_mat(C, n);
+        strassen_mult(A, B, C, n_p);
+        print_mat(C, n_p);
         TIMERSTOP(Strassen_Recursivo)
 
         // TIMERSTART(Strassen_Paralelo_Recursivo)
-        // strassen_par_mult(A, B, C, n);
-        // print_mat(C, n);
+        // strassen_par_mult(A, B, C, n_p);
+        // print_mat(C, n_p);
         // TIMERSTOP(Strassen_Paralelo_Recursivo)
     }else{
-        
-        for(int i=0;i<reps;i++){
-            TIMERSTART(Secuencial)
-            seq_mult(A, B, C, n);
-            TIMERSTOP(Secuencial)
-        }
+        for(int pow=n_min; pow<n+1; pow++){
+            std::cout << "N = 2^" << pow << "\n";
+            int n_p = (1 << pow);
+            int** A = filled_mat(n_p);
+            int** B = filled_mat(n_p);
+            int** C = empty_mat(n_p);
 
-        for(int i=0;i<reps;i++){
-            TIMERSTART(Paralelo)
-            par_mult(A, B, C, n);
-            TIMERSTOP(Paralelo)
-        }
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Secuencial)
+                seq_mult(A, B, C, n_p);
+                TIMERSTOP(Secuencial)
+            }
 
-        for(int i=0;i<reps;i++){
-            TIMERSTART(Cache)
-            cache_mult(A, B, C, n);
-            TIMERSTOP(Cache)
-        }
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Paralelo)
+                par_mult(A, B, C, n_p);
+                TIMERSTOP(Paralelo)
+            }
 
-        for(int i=0;i<reps;i++){
-            TIMERSTART(Cache_Paralelo)
-            cache_par_mult(A, B, C, n);
-            TIMERSTOP(Cache_Paralelo)
-        }
-        for(int i=0;i<reps;i++){
-            TIMERSTART(Tradicional_Recursivo)
-            traditional_mult(A, B, C, n);
-            TIMERSTOP(Tradicional_Recursivo)
-        }
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Cache)
+                cache_mult(A, B, C, n_p);
+                TIMERSTOP(Cache)
+            }
 
-        for(int i=0;i<reps;i++){
-            TIMERSTART(Strassen_Recursivo)
-            strassen_mult(A, B, C, n);
-            TIMERSTOP(Strassen_Recursivo)
-        }
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Cache_Paralelo)
+                cache_par_mult(A, B, C, n_p);
+                TIMERSTOP(Cache_Paralelo)
+            }
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Tradicional_Recursivo)
+                traditional_mult(A, B, C, n_p);
+                TIMERSTOP(Tradicional_Recursivo)
+            }
 
-        // TIMERSTART(Strassen_Paralelo_Recursivo)
-        // strassen_par_mult(A, B, C, n);
-        // TIMERSTOP(Strassen_Paralelo_Recursivo)
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Strassen_Recursivo)
+                strassen_mult(A, B, C, n_p);
+                TIMERSTOP(Strassen_Recursivo)
+            }
+
+            // TIMERSTART(Strassen_Paralelo_Recursivo)
+            // strassen_par_mult(A, B, C, n_p);
+            // TIMERSTOP(Strassen_Paralelo_Recursivo)
+        }
     }
 
     
