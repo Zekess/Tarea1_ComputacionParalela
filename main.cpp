@@ -13,13 +13,13 @@ int main(int argc, char *argv[]){
 
     char c;
 
-	while ((c = getopt(argc, argv, "n:m:t:r:p")) != -1)
+	while ((c = getopt(argc, argv, "m:n:t:r:p")) != -1)
 	{
 		switch (c) {
-			case 'n':
+			case 'm':
                 n_min = std::stoi (optarg);
 			break;
-			case 'm':
+			case 'n':
                 n_max = std::stoi (optarg);
 			break;
 			case 't':
