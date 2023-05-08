@@ -38,6 +38,7 @@ int main(int argc, char *argv[]){
 
     omp_set_num_threads (threads);
 
+    
     std::cout << "n_min = " << n_min << "\n";
     std::cout << "n_max = " << n << "\n";
     std::cout << "threads = " << threads << "\n";
