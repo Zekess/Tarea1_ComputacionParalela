@@ -43,6 +43,7 @@ int main(int argc, char *argv[]){
     std::cout << "n_max = " << n_max << "\n";
     std::cout << "threads = " << threads << "\n";
     std::cout << "reps = " << reps << "\n";
+    std::cout << "\n";
 
     if (print_results){
         for(int n = n_min; n<n_max+1; n++){

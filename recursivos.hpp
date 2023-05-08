@@ -15,7 +15,7 @@ void traditional_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
-    if (n==n_base){
+    if (n<=n_base){
         base_mult(A, B, C, n);
         return;
     }
@@ -95,7 +95,7 @@ void par_traditional_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
-    if (n==n_base){
+    if (n<=n_base){
         base_mult(A, B, C, n);
         return;
     }
@@ -186,7 +186,7 @@ void strassen_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
-    if (n==n_base){
+    if (n<=n_base){
         base_mult(A, B, C, n);
         return;
     }
@@ -291,7 +291,7 @@ void par_strassen_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
-    if (n==n_base){
+    if (n<=n_base){
         base_mult(A, B, C, n);
         return;
     }
