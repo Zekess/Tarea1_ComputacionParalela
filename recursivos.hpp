@@ -133,31 +133,31 @@ void par_traditional_mult(float** A, float** B, float** C, int n){
     float **Aux_1 = empty_mat(n/2);
     float **Aux_2 = empty_mat(n/2);
 
-    #pragma omp sections
+    #pragma omp parallel sections
     {
         #pragma omp section
         {
-        traditional_mult(A_11, B_11, Aux_1, n/2);
-        traditional_mult(A_12, B_21, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_11, n/2);
+            traditional_mult(A_11, B_11, Aux_1, n/2);
+            traditional_mult(A_12, B_21, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_11, n/2);
         }
         #pragma omp section
         {
-        traditional_mult(A_11, B_12, Aux_1, n/2);
-        traditional_mult(A_12, B_22, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_12, n/2);
+            traditional_mult(A_11, B_12, Aux_1, n/2);
+            traditional_mult(A_12, B_22, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_12, n/2);
         }
         #pragma omp section
         {
-        traditional_mult(A_21, B_11, Aux_1, n/2);
-        traditional_mult(A_22, B_21, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_21, n/2);
+            traditional_mult(A_21, B_11, Aux_1, n/2);
+            traditional_mult(A_22, B_21, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_21, n/2);
         }
         #pragma omp section
         {
-        traditional_mult(A_21, B_12, Aux_1, n/2);
-        traditional_mult(A_22, B_22, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_22, n/2);
+            traditional_mult(A_21, B_12, Aux_1, n/2);
+            traditional_mult(A_22, B_22, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_22, n/2);
         }
     }
 
@@ -534,31 +534,31 @@ void vect_par_traditional_mult(float** A, float** B, float** C, int n){
     float **Aux_1 = empty_mat(n/2);
     float **Aux_2 = empty_mat(n/2);
 
-    #pragma omp sections
+    #pragma omp parallel sections
     {
         #pragma omp section
         {
-        traditional_mult(A_11, B_11, Aux_1, n/2);
-        traditional_mult(A_12, B_21, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_11, n/2);
+            traditional_mult(A_11, B_11, Aux_1, n/2);
+            traditional_mult(A_12, B_21, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_11, n/2);
         }
         #pragma omp section
         {
-        traditional_mult(A_11, B_12, Aux_1, n/2);
-        traditional_mult(A_12, B_22, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_12, n/2);
+            traditional_mult(A_11, B_12, Aux_1, n/2);
+            traditional_mult(A_12, B_22, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_12, n/2);
         }
         #pragma omp section
         {
-        traditional_mult(A_21, B_11, Aux_1, n/2);
-        traditional_mult(A_22, B_21, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_21, n/2);
+            traditional_mult(A_21, B_11, Aux_1, n/2);
+            traditional_mult(A_22, B_21, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_21, n/2);
         }
         #pragma omp section
         {
-        traditional_mult(A_21, B_12, Aux_1, n/2);
-        traditional_mult(A_22, B_22, Aux_2, n/2);
-        mat_sum(Aux_1, Aux_2, C_22, n/2);
+            traditional_mult(A_21, B_12, Aux_1, n/2);
+            traditional_mult(A_22, B_22, Aux_2, n/2);
+            mat_sum(Aux_1, Aux_2, C_22, n/2);
         }
     }
 
