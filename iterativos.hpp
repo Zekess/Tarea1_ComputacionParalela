@@ -1,31 +1,7 @@
 #ifndef ITERATIVOS
 #define ITERATIVOS
 
-//#include <thread>
-#include <iostream>
 #include "comunes.hpp"
-#include <vector>
-#include <omp.h>
-#include <immintrin.h>
-
-// ------------------------------------------
-// Basic Functions:
-// ------------------------------------------
-
-// void swap(float *a, float *b){
-//     float *aux;
-//     a 
-// }
-
-float **tr_mat(float **A, int n){
-    float **A_t = empty_mat(n);
-    for (uint64_t i = 0; i < n; i++){
-        for (uint64_t j = 0; j < n; j++) {
-            A_t[i][j] = A[j][i];
-        }
-    }
-    return A_t;
-}
 
 
 // ------------------------------------------
@@ -53,17 +29,22 @@ void seq_mult(float** A, float** B, float** C, float n){
 // void seq_mult_vect(float** A, float** B, float** C, int n){
 //     // Matriz A, B y C de nxn
 //     // n es potencia de 2.
-
-//     //Se realiza la mutplicación
-//     for (uint64_t i = 0; i < n; i++){
-//         for (uint64_t j = 0; j < n; j++) {
-//             float accum = 0;
-//             for (uint64_t k = 0; k < n; k++){
-//                 __m256 A_row_i = _mm256_loadu_ps(&A[i][j+8*k]);
-//                 __m256 B_col_j = _mm256_loadu_ps(&B[i+8*k][j]);
-//                 accum += _mm256_dp_ps(A_row_i, B_col_j, 0);
-//             }
-//             C[i][j] = accum;
+//     // Para vectorizar la multiplicación usarémos la función 
+//     // mat_mul_4x4_vect sobre bloques de 4x4 secuenciales
+//     for (uint64_t i = 0; i < n; i+=4){
+//         for (uint64_t j = 0; j < n; j+=4) {
+//             // Se extraen los bloques de 4x4
+//             float** A_block_ij = new float*[4];
+//             float** B_block_ij = new float*[4];
+//             float** C_block_ij = new float*[4];
+//             submat(A, A_block_ij, 4, i, j);
+//             submat(B, B_block_ij, 4, i, j);
+//             submat(C, C_block_ij, 4, i, j);
+//             print(A_block_ij, 4);
+//             print(B_block_ij, 4);
+//             print(C_block_ij, 4);
+//             // Realizamos la multiplicación:
+//             mat_mul_4x4_vect(A_block_ij, B_block_ij, C_block_ij);
 //         }
 //     }
 // }

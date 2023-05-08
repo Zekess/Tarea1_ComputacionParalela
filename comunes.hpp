@@ -1,15 +1,10 @@
 #ifndef COMUNES
 #define COMUNES
 
-//#include <thread>
 #include <iostream>
-#include <vector>
 #include <omp.h>
 #include <immintrin.h>
 
-// ------------------------------------------
-// Basic Functions:
-// ------------------------------------------
 
 float **filled_mat(int n){
     float **A = new float*[n];
@@ -22,7 +17,6 @@ float **filled_mat(int n){
     return A;
 }
 
-
 float **empty_mat(int n){
     float **A = new float*[n];
     for (uint64_t i = 0; i < n; i++){
@@ -31,6 +25,15 @@ float **empty_mat(int n){
     return A;
 }
 
+float **tr_mat(float **A, int n){
+    float **A_t = empty_mat(n);
+    for (uint64_t i = 0; i < n; i++){
+        for (uint64_t j = 0; j < n; j++) {
+            A_t[i][j] = A[j][i];
+        }
+    }
+    return A_t;
+}
 
 void base_mult(float** A, float** B, float** C, float n){
     // Matriz A, B y C de nxn
@@ -72,12 +75,34 @@ void mat_mul_4x4_vect(float** A, float** B, float** C){
     }
 }
 
+void submat(float** A, float** B, int n, int n_row, int n_col){
+	for (int i = 0; i < n; i++) 
+		B[i] = &A[n_row+i][n_col];
+}
+
+float **mat_sum(float** A, float** B, float** C, int n){
+    for(int i=0; i<n;i++){
+        for(int j=0; j<n; j++){
+            C[i][j]=A[i][j]+B[i][j];
+        }
+    }
+    return C;
+}
+
+float **mat_sub(float** A, float** B, float** C, int n){
+    for(int i=0; i<n;i++){
+        for(int j=0; j<n; j++){
+            C[i][j]=A[i][j]-B[i][j];
+        }
+    }
+    return C;
+}
+
 void print(const __m128 v) {
     float *a = (float *) &v;
     for (int i = 0; i < 4; ++i) std::cout<<a[i]<< " ";
     std::cout << std::endl;
 }
-
 
 void print(float** A, int n) {
     for (uint64_t i = 0; i < n; i++){

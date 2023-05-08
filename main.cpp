@@ -50,13 +50,25 @@ int main(int argc, char *argv[]){
         float** B = filled_mat(n_p);
         float** C = empty_mat(n_p);
 
+        std::cout << "Matriz A:" << "\n";
         print(A, n_p);
+        std::cout << "\n";
+
+        std::cout << "Matriz B:" << "\n";
         print(B, n_p);
+        std::cout << "\n";
+
+        // Iterativos -------------------------------
 
         TIMERSTART(Secuencial)
         seq_mult(A, B, C, n_p);
         print(C, n_p);
         TIMERSTOP(Secuencial)
+
+        // TIMERSTART(Secuencial_Vect)
+        // seq_mult_vect(A, B, C, n_p);
+        // print(C, n_p);
+        // TIMERSTOP(Secuencial_Vect)
 
         TIMERSTART(Paralelo)
         par_mult(A, B, C, n_p);
@@ -73,24 +85,47 @@ int main(int argc, char *argv[]){
         print(C, n_p);
         TIMERSTOP(Cache_Paralelo)
 
-        TIMERSTART(Vectorized)
-        mat_mul_4x4_vect(A, B, C);
-        TIMERSTOP(Vectorized)
+        // Recursivos -------------------------------
 
         TIMERSTART(Tradicional_Recursivo)
         traditional_mult(A, B, C, n_p);
         print(C, n_p);
         TIMERSTOP(Tradicional_Recursivo)
 
+        TIMERSTART(Tradicional_Recursivo_Paralelo)
+        par_traditional_mult(A, B, C, n_p);
+        print(C, n_p);
+        TIMERSTOP(Tradicional_Recursivo_Paralelo)
+
         TIMERSTART(Strassen_Recursivo)
         strassen_mult(A, B, C, n_p);
         print(C, n_p);
         TIMERSTOP(Strassen_Recursivo)
 
-        // TIMERSTART(Strassen_Paralelo_Recursivo)
-        // strassen_par_mult(A, B, C, n_p);
-        // print(C, n_p);
-        // TIMERSTOP(Strassen_Paralelo_Recursivo)
+        TIMERSTART(Strassen_Paralelo_Recursivo)
+        par_strassen_mult(A, B, C, n_p);
+        print(C, n_p);
+        TIMERSTOP(Strassen_Paralelo_Recursivo)
+
+        TIMERSTART(Tradicional_Recursivo_Vectorizado)
+        vect_traditional_mult(A, B, C, n_p);
+        print(C, n_p);
+        TIMERSTOP(Tradicional_Recursivo_Vectorizado)
+
+        TIMERSTART(Tradicional_Recursivo_Paralelo_Vectorizado)
+        vect_par_traditional_mult(A, B, C, n_p);
+        print(C, n_p);
+        TIMERSTOP(Tradicional_Recursivo_Paralelo_Vectorizado)
+
+        TIMERSTART(Strassen_Recursivo_Vectorizado)
+        vect_strassen_mult(A, B, C, n_p);
+        print(C, n_p);
+        TIMERSTOP(Strassen_Recursivo_Vectorizado)
+
+        TIMERSTART(Strassen_Paralelo_Recursivo_Vectorizado)
+        vect_par_strassen_mult(A, B, C, n_p);
+        print(C, n_p);
+        TIMERSTOP(Strassen_Paralelo_Recursivo_Vectorizado)
     }else{
         for(int pow=n_min; pow<n+1; pow++){
             std::cout << "N = 2^" << pow << "\n";
@@ -98,6 +133,8 @@ int main(int argc, char *argv[]){
             float** A = filled_mat(n_p);
             float** B = filled_mat(n_p);
             float** C = empty_mat(n_p);
+
+            // Iterativos ----------------------------
 
             for(int i=0;i<reps;i++){
                 TIMERSTART(Secuencial)
@@ -122,15 +159,19 @@ int main(int argc, char *argv[]){
                 cache_par_mult(A, B, C, n_p);
                 TIMERSTOP(Cache_Paralelo)
             }
-            for(int i=0;i<reps;i++){
-                TIMERSTART(Vectorized)
-                mat_mul_4x4_vect(A, B, C);
-                TIMERSTOP(Vectorized)
-            }
+
+            // Recursivos -------------------------------------
+
             for(int i=0;i<reps;i++){
                 TIMERSTART(Tradicional_Recursivo)
                 traditional_mult(A, B, C, n_p);
                 TIMERSTOP(Tradicional_Recursivo)
+            }
+
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Tradicional_Recursivo_Paralelo)
+                par_traditional_mult(A, B, C, n_p);
+                TIMERSTOP(Tradicional_Recursivo_Paralelo)
             }
 
             for(int i=0;i<reps;i++){
@@ -139,9 +180,37 @@ int main(int argc, char *argv[]){
                 TIMERSTOP(Strassen_Recursivo)
             }
 
-            // TIMERSTART(Strassen_Paralelo_Recursivo)
-            // strassen_par_mult(A, B, C, n_p);
-            // TIMERSTOP(Strassen_Paralelo_Recursivo)
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Strassen_Recursivo_Paralelo)
+                par_strassen_mult(A, B, C, n_p);
+                TIMERSTOP(Strassen_Recursivo_Paralelo)
+            }
+
+            // Vectorizado ------------------------------------
+
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Tradicional_Recursivo_Vectorizado)
+                vect_traditional_mult(A, B, C, n_p);
+                TIMERSTOP(Tradicional_Recursivo_Vectorizado)
+            }
+
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Tradicional_Recursivo_Paralelo_Vectorizado)
+                vect_par_traditional_mult(A, B, C, n_p);
+                TIMERSTOP(Tradicional_Recursivo_Paralelo_Vectorizado)
+            }
+
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Strassen_Recursivo_Vectorizado)
+                vect_strassen_mult(A, B, C, n_p);
+                TIMERSTOP(Strassen_Recursivo_Vectorizado)
+            }
+
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Strassen_Recursivo_Paralelo_Vectorizado)
+                vect_par_strassen_mult(A, B, C, n_p);
+                TIMERSTOP(Strassen_Recursivo_Paralelo_Vectorizado)
+            }
         }
     }
 
