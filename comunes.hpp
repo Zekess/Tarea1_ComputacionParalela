@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <omp.h>
-#include <immintrin.h>
 
 
 float **filled_mat(int n){
@@ -51,30 +50,6 @@ void base_mult(float** A, float** B, float** C, float n){
     }
 }
 
-void mat_mul_4x4_vect(float** A, float** B, float** C){
-    __m128 B_col_0 = _mm_load_ps(B[0]);
-    __m128 B_col_1 = _mm_load_ps(B[1]);
-    __m128 B_col_2 = _mm_load_ps(B[2]);
-    __m128 B_col_3 = _mm_load_ps(B[3]);
-
-    _MM_TRANSPOSE4_PS(B_col_0, B_col_1, B_col_2, B_col_3);
-
-    for(int i=0; i<4; i++){
-        __m128 A_row_i = _mm_load_ps(A[i]);
-
-        __m128 r8 = _mm_mul_ps(A_row_i, B_col_0);
-        __m128 r9 = _mm_mul_ps(A_row_i, B_col_1);
-        __m128 r10 = _mm_mul_ps(A_row_i, B_col_2);
-        __m128 r11 = _mm_mul_ps(A_row_i, B_col_3);
-
-        r8 = _mm_hadd_ps(r8, r9);
-        r9 = _mm_hadd_ps(r10, r11);
-
-        __m128 r12 = _mm_hadd_ps(r8, r9);
-        _mm_store_ps(C[i], r12);
-    }
-}
-
 void submat(float** A, float** B, int n, int n_row, int n_col){
 	for (int i = 0; i < n; i++) 
 		B[i] = &A[n_row+i][n_col];
@@ -96,12 +71,6 @@ float **mat_sub(float** A, float** B, float** C, int n){
         }
     }
     return C;
-}
-
-void print(const __m128 v) {
-    float *a = (float *) &v;
-    for (int i = 0; i < 4; ++i) std::cout<<a[i]<< " ";
-    std::cout << std::endl;
 }
 
 void print(float** A, int n) {

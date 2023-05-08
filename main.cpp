@@ -1,5 +1,3 @@
-#include <iostream>
-#include <cstdint>
 #include "metrictime.hpp"
 #include "comunes.hpp"
 #include "iterativos.hpp"
@@ -65,11 +63,6 @@ int main(int argc, char *argv[]){
         print(C, n_p);
         TIMERSTOP(Secuencial)
 
-        // TIMERSTART(Secuencial_Vect)
-        // seq_mult_vect(A, B, C, n_p);
-        // print(C, n_p);
-        // TIMERSTOP(Secuencial_Vect)
-
         TIMERSTART(Paralelo)
         par_mult(A, B, C, n_p);
         print(C, n_p);
@@ -102,10 +95,11 @@ int main(int argc, char *argv[]){
         print(C, n_p);
         TIMERSTOP(Strassen_Recursivo)
 
-        TIMERSTART(Strassen_Paralelo_Recursivo)
+        TIMERSTART(Strassen_Recursivo_Paralelo)
         par_strassen_mult(A, B, C, n_p);
         print(C, n_p);
-        TIMERSTOP(Strassen_Paralelo_Recursivo)
+        TIMERSTOP(Strassen_Recursivo_Paralelo)
+
     }else{
         for(int pow=n_min; pow<n+1; pow++){
             std::cout << "N = 2^" << pow << "\n";
