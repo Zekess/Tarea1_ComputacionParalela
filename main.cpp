@@ -4,21 +4,23 @@
 #include "recursivos.hpp"
 #include <getopt.h>
 
-int n_min = 6;
-
 int main(int argc, char *argv[]){
-    int n;
-    char c;
+    int n_min = 6;
+    int n_max = 13;
     bool print_results = false;
     uint threads = 8;
     int reps = 1;
 
-	while ((c = getopt(argc, argv, "n:t:r:p")) != -1)
+    char c;
+
+	while ((c = getopt(argc, argv, "n:m:t:r:p")) != -1)
 	{
 		switch (c) {
 			case 'n':
-				//n = (1 << std::stoi (optarg));
-                n = std::stoi (optarg);
+                n_min = std::stoi (optarg);
+			break;
+			case 'm':
+                n_max = std::stoi (optarg);
 			break;
 			case 't':
 				threads = std::stoi (optarg);
@@ -38,72 +40,73 @@ int main(int argc, char *argv[]){
 
     
     std::cout << "n_min = " << n_min << "\n";
-    std::cout << "n_max = " << n << "\n";
+    std::cout << "n_max = " << n_max << "\n";
     std::cout << "threads = " << threads << "\n";
     std::cout << "reps = " << reps << "\n";
 
     if (print_results){
-        int n_p = (1 << n);
-        float** A = filled_mat(n_p);
-        float** B = filled_mat(n_p);
-        float** C = empty_mat(n_p);
+        for(int n = n_min; n<n_max+1; n++){
+            int n_p = (1 << n);
+            float** A = filled_mat(n_p);
+            float** B = filled_mat(n_p);
+            float** C = empty_mat(n_p);
 
-        std::cout << "Matriz A:" << "\n";
-        print(A, n_p);
-        std::cout << "\n";
+            std::cout << "Matriz A:" << "\n";
+            print(A, n_p);
+            std::cout << "\n";
 
-        std::cout << "Matriz B:" << "\n";
-        print(B, n_p);
-        std::cout << "\n";
+            std::cout << "Matriz B:" << "\n";
+            print(B, n_p);
+            std::cout << "\n";
 
-        // Iterativos -------------------------------
+            // Iterativos -------------------------------
 
-        TIMERSTART(Secuencial)
-        seq_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Secuencial)
+            TIMERSTART(Secuencial)
+            seq_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Secuencial)
 
-        TIMERSTART(Paralelo)
-        par_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Paralelo)
+            TIMERSTART(Paralelo)
+            par_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Paralelo)
 
-        TIMERSTART(Cache)
-        cache_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Cache)
+            TIMERSTART(Cache)
+            cache_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Cache)
 
-        TIMERSTART(Cache_Paralelo)
-        cache_par_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Cache_Paralelo)
+            TIMERSTART(Cache_Paralelo)
+            cache_par_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Cache_Paralelo)
 
-        // Recursivos -------------------------------
+            // Recursivos -------------------------------
 
-        TIMERSTART(Tradicional_Recursivo)
-        traditional_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Tradicional_Recursivo)
+            TIMERSTART(Tradicional_Recursivo)
+            traditional_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Tradicional_Recursivo)
 
-        TIMERSTART(Tradicional_Recursivo_Paralelo)
-        par_traditional_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Tradicional_Recursivo_Paralelo)
+            TIMERSTART(Tradicional_Recursivo_Paralelo)
+            par_traditional_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Tradicional_Recursivo_Paralelo)
 
-        TIMERSTART(Strassen_Recursivo)
-        strassen_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Strassen_Recursivo)
+            TIMERSTART(Strassen_Recursivo)
+            strassen_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Strassen_Recursivo)
 
-        TIMERSTART(Strassen_Recursivo_Paralelo)
-        par_strassen_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Strassen_Recursivo_Paralelo)
-
+            TIMERSTART(Strassen_Recursivo_Paralelo)
+            par_strassen_mult(A, B, C, n_p);
+            print(C, n_p);
+            TIMERSTOP(Strassen_Recursivo_Paralelo)
+        }
     }else{
-        for(int pow=n_min; pow<n+1; pow++){
-            std::cout << "N = 2^" << pow << "\n";
-            int n_p = (1 << pow);
+        for(int n=n_min; n<n_max+1; n++){
+            std::cout << "dim = 2^" << n << "\n";
+            int n_p = (1 << n);
             float** A = filled_mat(n_p);
             float** B = filled_mat(n_p);
             float** C = empty_mat(n_p);
