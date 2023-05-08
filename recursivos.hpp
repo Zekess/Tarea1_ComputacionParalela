@@ -7,18 +7,18 @@
 //#include <vector>
 #include <omp.h>
 
-int n_base = (1 << 5);
+int n_base = (1 << 2);
 
 // ------------------------------------------
 // Basic Functions:
 // ------------------------------------------
 
-void submat(int** A, int** B, int n, int n_row, int n_col){
+void submat(float** A, float** B, int n, int n_row, int n_col){
 	for (int i = 0; i < n; i++) 
 		B[i] = &A[n_row+i][n_col];
 }
 
-int **mat_sum(int** A, int** B, int** C, int n){
+float **mat_sum(float** A, float** B, float** C, int n){
     for(int i=0; i<n;i++){
         for(int j=0; j<n; j++){
             C[i][j]=A[i][j]+B[i][j];
@@ -27,7 +27,7 @@ int **mat_sum(int** A, int** B, int** C, int n){
     return C;
 }
 
-int **mat_sub(int** A, int** B, int** C, int n){
+float **mat_sub(float** A, float** B, float** C, int n){
     for(int i=0; i<n;i++){
         for(int j=0; j<n; j++){
             C[i][j]=A[i][j]-B[i][j];
@@ -40,7 +40,7 @@ int **mat_sub(int** A, int** B, int** C, int n){
 // Recursive Multiplication Functions:
 // ------------------------------------------
 
-void traditional_mult(int** A, int** B, int** C, int n){
+void traditional_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
@@ -57,38 +57,38 @@ void traditional_mult(int** A, int** B, int** C, int n){
         return;
     }
 
-    int **A_11 = new int*[n/2];
-    int **A_12 = new int*[n/2];
-    int **A_21 = new int*[n/2];
-    int **A_22 = new int*[n/2];
+    float **A_11 = new float*[n/2];
+    float **A_12 = new float*[n/2];
+    float **A_21 = new float*[n/2];
+    float **A_22 = new float*[n/2];
 
     submat(A, A_11, n/2, 0, 0);
     submat(A, A_12, n/2, 0, n/2);
     submat(A, A_21, n/2, n/2, 0);
     submat(A, A_22, n/2, n/2, n/2);
 
-    int **B_11 = new int*[n/2];
-    int **B_12 = new int*[n/2];
-    int **B_21 = new int*[n/2];
-    int **B_22 = new int*[n/2];
+    float **B_11 = new float*[n/2];
+    float **B_12 = new float*[n/2];
+    float **B_21 = new float*[n/2];
+    float **B_22 = new float*[n/2];
 
     submat(B, B_11, n/2, 0, 0);
     submat(B, B_12, n/2, 0, n/2);
     submat(B, B_21, n/2, n/2, 0);
     submat(B, B_22, n/2, n/2, n/2);
 
-    int **C_11 = new int*[n/2];
-    int **C_12 = new int*[n/2];
-    int **C_21 = new int*[n/2];
-    int **C_22 = new int*[n/2];
+    float **C_11 = new float*[n/2];
+    float **C_12 = new float*[n/2];
+    float **C_21 = new float*[n/2];
+    float **C_22 = new float*[n/2];
 
     submat(C, C_11, n/2, 0, 0);
     submat(C, C_12, n/2, 0, n/2);
     submat(C, C_21, n/2, n/2, 0);
     submat(C, C_22, n/2, n/2, n/2);
 
-    int **Aux_1 = empty_mat(n/2);
-    int **Aux_2 = empty_mat(n/2);
+    float **Aux_1 = empty_mat(n/2);
+    float **Aux_2 = empty_mat(n/2);
 
 
     traditional_mult(A_11, B_11, Aux_1, n/2);
@@ -129,7 +129,7 @@ void traditional_mult(int** A, int** B, int** C, int n){
 }
 
 
-void strassen_mult(int** A, int** B, int** C, int n){
+void strassen_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // con n potencia de 2.
 
@@ -146,36 +146,36 @@ void strassen_mult(int** A, int** B, int** C, int n){
         return;
     }
 
-    int **A_11 = new int*[n/2];
-    int **A_12 = new int*[n/2];
-    int **A_21 = new int*[n/2];
-    int **A_22 = new int*[n/2];
+    float **A_11 = new float*[n/2];
+    float **A_12 = new float*[n/2];
+    float **A_21 = new float*[n/2];
+    float **A_22 = new float*[n/2];
 
     submat(A, A_11, n/2, 0, 0);
     submat(A, A_12, n/2, 0, n/2);
     submat(A, A_21, n/2, n/2, 0);
     submat(A, A_22, n/2, n/2, n/2);
 
-    int **B_11 = new int*[n/2];
-    int **B_12 = new int*[n/2];
-    int **B_21 = new int*[n/2];
-    int **B_22 = new int*[n/2];
+    float **B_11 = new float*[n/2];
+    float **B_12 = new float*[n/2];
+    float **B_21 = new float*[n/2];
+    float **B_22 = new float*[n/2];
 
     submat(B, B_11, n/2, 0, 0);
     submat(B, B_12, n/2, 0, n/2);
     submat(B, B_21, n/2, n/2, 0);
     submat(B, B_22, n/2, n/2, n/2);
 
-    int **M_1 = empty_mat(n/2);
-    int **M_2 = empty_mat(n/2);
-    int **M_3 = empty_mat(n/2);
-    int **M_4 = empty_mat(n/2);
-    int **M_5 = empty_mat(n/2);
-    int **M_6 = empty_mat(n/2);
-    int **M_7 = empty_mat(n/2);
+    float **M_1 = empty_mat(n/2);
+    float **M_2 = empty_mat(n/2);
+    float **M_3 = empty_mat(n/2);
+    float **M_4 = empty_mat(n/2);
+    float **M_5 = empty_mat(n/2);
+    float **M_6 = empty_mat(n/2);
+    float **M_7 = empty_mat(n/2);
 
-    int **Aux_1 = empty_mat(n/2);
-    int **Aux_2 = empty_mat(n/2);
+    float **Aux_1 = empty_mat(n/2);
+    float **Aux_2 = empty_mat(n/2);
 
 
     // M1 = (A11 + A22)*(B11 + B22)

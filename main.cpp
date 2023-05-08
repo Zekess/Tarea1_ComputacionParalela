@@ -1,12 +1,10 @@
 #include <iostream>
 #include <cstdint>
 #include "metrictime.hpp"
-//#include "comunes.hpp"
+#include "comunes.hpp"
 #include "iterativos.hpp"
 #include "recursivos.hpp"
 #include <getopt.h>
-
-//using namespace std;
 
 int n_min = 6;
 
@@ -47,51 +45,58 @@ int main(int argc, char *argv[]){
 
     if (print_results){
         int n_p = (1 << n);
-        int** A = filled_mat(n_p);
-        int** B = filled_mat(n_p);
-        int** C = empty_mat(n_p);
+        float** A = filled_mat(n_p);
+        float** B = filled_mat(n_p);
+        float** C = empty_mat(n_p);
+
+        print(A, n_p);
+        print(B, n_p);
 
         TIMERSTART(Secuencial)
         seq_mult(A, B, C, n_p);
-        print_mat(C, n_p);
+        print(C, n_p);
         TIMERSTOP(Secuencial)
 
         TIMERSTART(Paralelo)
         par_mult(A, B, C, n_p);
-        print_mat(C, n_p);
+        print(C, n_p);
         TIMERSTOP(Paralelo)
 
         TIMERSTART(Cache)
         cache_mult(A, B, C, n_p);
-        print_mat(C, n_p);
+        print(C, n_p);
         TIMERSTOP(Cache)
 
         TIMERSTART(Cache_Paralelo)
         cache_par_mult(A, B, C, n_p);
-        print_mat(C, n_p);
+        print(C, n_p);
         TIMERSTOP(Cache_Paralelo)
+
+        TIMERSTART(Vectorized)
+        mat_mul_4x4_vect(A, B, C);
+        TIMERSTOP(Vectorized)
 
         TIMERSTART(Tradicional_Recursivo)
         traditional_mult(A, B, C, n_p);
-        print_mat(C, n_p);
+        print(C, n_p);
         TIMERSTOP(Tradicional_Recursivo)
 
         TIMERSTART(Strassen_Recursivo)
         strassen_mult(A, B, C, n_p);
-        print_mat(C, n_p);
+        print(C, n_p);
         TIMERSTOP(Strassen_Recursivo)
 
         // TIMERSTART(Strassen_Paralelo_Recursivo)
         // strassen_par_mult(A, B, C, n_p);
-        // print_mat(C, n_p);
+        // print(C, n_p);
         // TIMERSTOP(Strassen_Paralelo_Recursivo)
     }else{
         for(int pow=n_min; pow<n+1; pow++){
             std::cout << "N = 2^" << pow << "\n";
             int n_p = (1 << pow);
-            int** A = filled_mat(n_p);
-            int** B = filled_mat(n_p);
-            int** C = empty_mat(n_p);
+            float** A = filled_mat(n_p);
+            float** B = filled_mat(n_p);
+            float** C = empty_mat(n_p);
 
             for(int i=0;i<reps;i++){
                 TIMERSTART(Secuencial)
@@ -115,6 +120,11 @@ int main(int argc, char *argv[]){
                 TIMERSTART(Cache_Paralelo)
                 cache_par_mult(A, B, C, n_p);
                 TIMERSTOP(Cache_Paralelo)
+            }
+            for(int i=0;i<reps;i++){
+                TIMERSTART(Vectorized)
+                mat_mul_4x4_vect(A, B, C);
+                TIMERSTOP(Vectorized)
             }
             for(int i=0;i<reps;i++){
                 TIMERSTART(Tradicional_Recursivo)

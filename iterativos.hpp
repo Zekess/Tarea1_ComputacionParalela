@@ -12,8 +12,13 @@
 // Basic Functions:
 // ------------------------------------------
 
-int **tr_mat(int **A, int n){
-    int **A_t = empty_mat(n);
+// void swap(float *a, float *b){
+//     float *aux;
+//     a 
+// }
+
+float **tr_mat(float **A, int n){
+    float **A_t = empty_mat(n);
     for (uint64_t i = 0; i < n; i++){
         for (uint64_t j = 0; j < n; j++) {
             A_t[i][j] = A[j][i];
@@ -28,7 +33,7 @@ int **tr_mat(int **A, int n){
 // ------------------------------------------
 
 
-void seq_mult(int** A, int** B, int** C, int n){
+void seq_mult(float** A, float** B, float** C, float n){
     // Matriz A, B y C de nxn
     // n es potencia de 2.
 
@@ -64,7 +69,7 @@ void seq_mult(int** A, int** B, int** C, int n){
 // }
 
 
-void par_mult(int** A, int** B, int** C, int n){
+void par_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // n es potencia de 2.
 
@@ -82,12 +87,12 @@ void par_mult(int** A, int** B, int** C, int n){
 }
 
 
-void cache_mult(int** A, int** B, int** C, int n){
+void cache_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // n es potencia de 2.
 
     // Transponemos B
-    int **B_t = tr_mat(B, n);
+    float **B_t = tr_mat(B, n);
 
     // Multiplicamos
     for (uint64_t i = 0; i < n; i++){
@@ -102,12 +107,12 @@ void cache_mult(int** A, int** B, int** C, int n){
 }
 
 
-void cache_par_mult(int** A, int** B, int** C, int n){
+void cache_par_mult(float** A, float** B, float** C, int n){
     // Matriz A, B y C de nxn
     // n es potencia de 2.
 
     // Transponemos B
-    int **B_t = tr_mat(B, n);
+    float **B_t = tr_mat(B, n);
 
     // Multiplicamos
     #pragma omp parallel for
