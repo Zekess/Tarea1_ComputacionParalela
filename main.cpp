@@ -106,26 +106,6 @@ int main(int argc, char *argv[]){
         par_strassen_mult(A, B, C, n_p);
         print(C, n_p);
         TIMERSTOP(Strassen_Paralelo_Recursivo)
-
-        TIMERSTART(Tradicional_Recursivo_Vectorizado)
-        vect_traditional_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Tradicional_Recursivo_Vectorizado)
-
-        TIMERSTART(Tradicional_Recursivo_Paralelo_Vectorizado)
-        vect_par_traditional_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Tradicional_Recursivo_Paralelo_Vectorizado)
-
-        TIMERSTART(Strassen_Recursivo_Vectorizado)
-        vect_strassen_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Strassen_Recursivo_Vectorizado)
-
-        TIMERSTART(Strassen_Paralelo_Recursivo_Vectorizado)
-        vect_par_strassen_mult(A, B, C, n_p);
-        print(C, n_p);
-        TIMERSTOP(Strassen_Paralelo_Recursivo_Vectorizado)
     }else{
         for(int pow=n_min; pow<n+1; pow++){
             std::cout << "N = 2^" << pow << "\n";
@@ -184,32 +164,6 @@ int main(int argc, char *argv[]){
                 TIMERSTART(Strassen_Recursivo_Paralelo)
                 par_strassen_mult(A, B, C, n_p);
                 TIMERSTOP(Strassen_Recursivo_Paralelo)
-            }
-
-            // Vectorizado ------------------------------------
-
-            for(int i=0;i<reps;i++){
-                TIMERSTART(Tradicional_Recursivo_Vectorizado)
-                vect_traditional_mult(A, B, C, n_p);
-                TIMERSTOP(Tradicional_Recursivo_Vectorizado)
-            }
-
-            for(int i=0;i<reps;i++){
-                TIMERSTART(Tradicional_Recursivo_Paralelo_Vectorizado)
-                vect_par_traditional_mult(A, B, C, n_p);
-                TIMERSTOP(Tradicional_Recursivo_Paralelo_Vectorizado)
-            }
-
-            for(int i=0;i<reps;i++){
-                TIMERSTART(Strassen_Recursivo_Vectorizado)
-                vect_strassen_mult(A, B, C, n_p);
-                TIMERSTOP(Strassen_Recursivo_Vectorizado)
-            }
-
-            for(int i=0;i<reps;i++){
-                TIMERSTART(Strassen_Recursivo_Paralelo_Vectorizado)
-                vect_par_strassen_mult(A, B, C, n_p);
-                TIMERSTOP(Strassen_Recursivo_Paralelo_Vectorizado)
             }
         }
     }
