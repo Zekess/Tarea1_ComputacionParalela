@@ -5,7 +5,6 @@
 #include <getopt.h>
 
 
-
 int main(int argc, char *argv[]){
     int n_min = 6;
     int n_max = 13;
