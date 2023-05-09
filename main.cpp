@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     int n_max = 13;
     bool print_results = false;
     uint threads = 8;
-    int reps = 1;
+    int reps = 10;
 
     char c;
 
