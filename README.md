@@ -18,7 +18,7 @@ Así, para correr main se ejecutó utilizando los valores por defecto:
 $./main
 ```
 
-Y se almacenó el resultado en un archivo .txt para hacer los análisis experimentales.
+Y se almacenó el resultado en un archivo .txt para hacer los análisis experimentales. En los 3 archivos .csv que se encuentran en el repositorio se encuentra la media, desviación estándar (std) y el coeficiente de variación (cv) para los tiempos de ejecución medidos.
 
 
 El archivo vectorized.cpp tiene el código con el que intentamos implementar vectorización a la multiplicación de matrices. Sin embargo sólo se logró multiplicar matrices de 4x4, lo cual no logró mostrar un impacto en los tiempos de ejecución de los algoritmos recursivos. Para compilarlo y ejecutarlo utilizamos lo siguiente
